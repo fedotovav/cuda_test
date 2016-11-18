@@ -1,0 +1,6 @@
+if !(test -d bin); then mkdir bin; fi
+if !(test -d obj); then mkdir obj; fi
+g++ -c t_cpu_calc.cpp -o obj/t_cpu_calc.o -I/usr/local/cuda/include -I/usr/local/include -fopenmp -g 
+/usr/local/cuda/bin/nvcc -w -c t_cpu_gpu_calc.cu -o obj/t_cpu_gpu_calc.o -gencode arch=compute_20,code=compute_20 -g -Xcompiler -fopenmp -lgomp -default-stream per-thread 
+g++ -c main.cpp -o obj/main.o -I/usr/local/cuda/include -I/usr/local/include -fopenmp -g 
+gcc -Wall -o bin/pggpu_cfd_test obj/t_cpu_calc.o obj/t_cpu_gpu_calc.o obj/main.o -fopenmp -lstdc++ -lgfortran -L/usr/local/cuda/lib64/ -lcuda -lcudart -lm
